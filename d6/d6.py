@@ -1,9 +1,9 @@
 with open("input.txt", "r") as f:
     data = f.readlines()
 
+#PART1
 
 grid = [[0 for x in range(1000)] for y in range(1000)]
-
 
 for instruction in data:
     parts = instruction.split()
@@ -29,6 +29,8 @@ for instruction in data:
 
 r1 = sum(map(sum, grid))
 print(f"R1: {r1}")
+
+#PART2
 
 grid = [[0 for x in range(1000)] for y in range(1000)]
 
