@@ -3,7 +3,9 @@ with open("input.txt", "r") as f:
 
 # PART1
 
-grid = [[0 for x in range(1000)] for y in range(1000)]
+
+def make_grid(x: int, y: int):
+    return [[0 for x_axis in range(x)] for y_axis in range(y)]
 
 
 def get_coord(instruction: str):
@@ -20,6 +22,8 @@ def get_coord(instruction: str):
 
     return action, start_x, start_y, end_x, end_y
 
+
+grid = make_grid(1000, 1000)
 
 for instruction in data:
     action, start_x, start_y, end_x, end_y = get_coord(instruction)
@@ -38,7 +42,7 @@ print(f"R1: {r1}")
 
 # PART2
 
-grid = [[0 for x in range(1000)] for y in range(1000)]
+grid = make_grid(1000, 1000)
 
 for instruction in data:
     action, start_x, start_y, end_x, end_y = get_coord(instruction)
