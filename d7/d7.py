@@ -1,43 +1,42 @@
 def parse_instruction(line):
-    source, target = line.strip().split(" -> ")
-    return target, source
+    input, output = line.strip().split(" -> ")
+    return output, input 
 
 
-def get_value(var):
-    if var.isdigit():
-        return int(var)
-    if var in mem:
-        return mem[var]
-    s = table[var]
-    if s.isdigit():
-        mem[var] = int(s)
-    elif s.startswith("NOT"):
-        mem[var] = ~get_value(s[4:]) & 0xFFFF
-    elif "OR" in s:
-        s1, s2 = s.split(" OR ")
-        mem[var] = get_value(s1) | get_value(s2)
-    elif "AND" in s:
-        s1, s2 = s.split(" AND ")
-        mem[var] = get_value(s1) & get_value(s2)
-    elif "LSHIFT" in s:
-        s1, d = s.split(" LSHIFT ")
-        mem[var] = get_value(s1) << int(d)
-    elif "RSHIFT" in s:
-        s1, d = s.split(" RSHIFT ")
-        mem[var] = get_value(s1) >> int(d)
+def get_value(wire, circuit):
+    if wire.isdigit():
+        return int(wire)
+    if wire in circuit:
+        return circuit[wire]
+    instruction = table[wire]
+    if instruction.isdigit():
+        circuit[wire] = int(instruction)
+    elif instruction.startswith("NOT"):
+        circuit[wire] = ~ get_value(instruction[4:], circuit) & 0xFFFF
+    elif "OR" in instruction:
+        wire_1, wire_2 = instruction.split(" OR ")
+        circuit[wire] = get_value(wire_1,circuit) | get_value(wire_2,circuit)
+    elif "AND" in instruction:
+        wire_1, wire_2 = instruction.split(" AND ")
+        circuit[wire] = get_value(wire_1,circuit) & get_value(wire_2,circuit)
+    elif "LSHIFT" in instruction:
+        wire_1, shift_value = instruction.split(" LSHIFT ")
+        circuit[wire] = get_value(wire_1,circuit) << int(shift_value)
+    elif "RSHIFT" in instruction:
+        wire_1, shift_value = instruction.split(" RSHIFT ")
+        circuit[wire] = get_value(wire_1,circuit) >> int(shift_value)
     else:
-        mem[var] = get_value(s)
-    return mem[var]
+        circuit[wire] = get_value(instruction,circuit)
+    return circuit[wire]
 
 
 with open("input.txt", "r") as f:
     data = f.readlines()
 
+#PART 1
 table = dict(parse_instruction(line) for line in data)
-mem = {}
+print(f"""R1: {get_value("a",circuit={})}""")
 
-print(f"R1: {get_value('a')}")
-
-table["b"] = str(get_value("a"))
-mem = {}
-print(f"R2: {get_value('a')}")
+#PART 2
+table["b"] = str(get_value("a",circuit={}))
+print(f"""R2: {get_value("a",circuit={})}""")
