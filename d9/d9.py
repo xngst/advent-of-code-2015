@@ -16,11 +16,8 @@ for line in data:
 dist_list = []
 for trip in list(permutations(city_set)):
     sum_dist = 0
-    for i in range(len(trip)):
-        try:
-            sum_dist += int(city_dict[(trip[i],trip[i+1])])
-        except IndexError as err:
-            pass
+    for i, j in zip(trip, trip[1:]):
+        sum_dist += int(city_dict[(i,j)])
     dist_list.append(sum_dist)
     
 print(f"R1: {min(dist_list)}")
